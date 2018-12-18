@@ -37,18 +37,15 @@ def brewerschronicle_background_task(api):
         set_temp = data['set_temp']
         logBC("set_temp: {0}".format(set_temp))
 
-        temp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, set_temp)
-        headers = {'content-type': 'application/json'}
-        logBC(temp_api_url)
-        requests.post(temp_api_url, data="", headers = headers, timeout = 1)
-        logBC(response)
-
-        logBC(fermenter.instance.get_target_temp())
-        logBC(fermenter.instance.cache_key)
-
         message = "{0}: Temp posted".format(brew_name)
         cbpi.notify("Brewers Chronicle", message, type="info", timeout=None)
-       logBC(message)
+        logBC(message)
+
+        # Reading target temp from Brewers Chronicle is disabled until I have finished implementing it into the site
+        # temp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, set_temp)
+        # headers = {'content-type': 'application/json'}
+        # logBC(temp_api_url)
+        # requests.post(temp_api_url, data="", headers = headers, timeout = 1)
 
       except Exception as e:
         logBC("Exception: {0}".format(e))
