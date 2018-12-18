@@ -6,13 +6,13 @@ This plug-in submits your ferment temperatures to the relevant ferment log in yo
 
 Use the "Add-On" section in the "System" menu to download and install this plug-in.
 
-Alternatively you can pull the source files from GitHub into the [craftbeerpi]/modulesplugins/ directory
+Alternatively, you can pull the source files from GitHub into the [craftbeerpi]/modules/plugins/ directory
 
 <strong>Configuration</strong>
 
-You will need to copy your API Key from the relevant brewery selected from https://brewerschronicle.com/BreweryDetails. Once yuo have selected the target brewery, expand the "Integration and API" section.
+You will need to copy your API Key from the relevant brewery selected from https://brewerschronicle.com/BreweryDetails. Once you have selected the target brewery, expand the "Integration and API" section.
 
-Copy and paste the API Key into the "brewerschronicle_api_key settign in the Parameters section.
+Copy and paste the API Key into the "brewerschronicle_api_key setting in the Parameters section.
 
 When entering a name for each of your active ferments enter in the "|" pipe symbol followed by the ferment id copied out of Brewers Chronicle.
 e.g "Summer pale ale|2018121514032846b96ce3c78b364f9"
