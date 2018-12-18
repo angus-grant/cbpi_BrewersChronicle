@@ -20,3 +20,5 @@ e.g "Summer pale ale|2018121514032846b96ce3c78b364f9"
 Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile.
 
 Once I have implemented recording the fermentation profile into the Brewers Chronicle website, the plug-in will also read the required target fermentation temperature and apply that to the relevant ferment profile in CraftBeerPi.
+
+<strong>NB</strong: one thing to note is that you will need to have a paid Brewers Chronicle brewery subscription to use the API. The free account does not allow API usage
