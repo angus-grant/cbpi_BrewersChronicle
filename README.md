@@ -15,7 +15,7 @@ You will need to copy your API Key from the relevant brewery selected from https
 Copy and paste the API Key into the "brewerschronicle_api_key setting in the Parameters section.
 
 When entering a name for each of your active ferments enter in the "|" pipe symbol followed by the ferment id copied out of Brewers Chronicle.
-e.g "Summer pale ale|2018121514032846b96ce3c78b364f9"
+e.g "Summer pale ale|2017010114032846b96ce3c78b364f9"
 
 Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile.
 
