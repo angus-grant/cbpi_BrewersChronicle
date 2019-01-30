@@ -2,7 +2,7 @@ from modules import cbpi
 import requests
 import time
 
-bc_uri = "http://192.168.0.27:51402/api/readings/cbpi"
+bc_uri = "https://api.brewerschronicle.com/api/readings/cbpi"
 
 def bc_api_key():
   api_key = cbpi.get_config_parameter('brewerschronicle_api_key', None)
@@ -12,7 +12,7 @@ def bc_api_key():
   else:
     return api_key
 
-@cbpi.backgroundtask(key="brewerschronicle_task", interval=10) #900)
+@cbpi.backgroundtask(key="brewerschronicle_task", interval=900)
 def brewerschronicle_background_task(api):
   api_key = bc_api_key()
   if api_key == "":
@@ -37,20 +37,22 @@ def brewerschronicle_background_task(api):
         set_temp = data['set_temp']
         logBC("set_temp: {0}".format(set_temp))
 
+        temp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, set_temp)
+        headers = {'content-type': 'application/json'}
+        logBC(temp_api_url)
+        requests.post(temp_api_url, data="", headers = headers, timeout = 1)
+        logBC(response)
+
+        logBC(fermenter.instance.get_target_temp())
+        logBC(fermenter.instance.cache_key)
+
         message = "{0}: Temp posted".format(brew_name)
         cbpi.notify("Brewers Chronicle", message, type="info", timeout=None)
         logBC(message)
 
-        # Reading target temp from Brewers Chronicle is disabled until I have finished implementing it into the site
-        # temp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, set_temp)
-        # headers = {'content-type': 'application/json'}
-        # logBC(temp_api_url)
-        # requests.post(temp_api_url, data="", headers = headers, timeout = 1)
-
       except Exception as e:
         logBC("Exception: {0}".format(e))
         pass
-
 
 def logBC(text):
     try:
@@ -63,5 +65,6 @@ def logBC(text):
     except Exception as e:
         cbpi.emit(e, "")
         self.notify("Actor Error", "Failed to setup actor %s. Please check the configuraiton" % value.name, type="danger", timeout=None)
-       self.app.logger.error("Initializing of Actor %s failed" % id)
-       
+        self.app.logger.error("Initializing of Actor %s failed" % id)
+
+
