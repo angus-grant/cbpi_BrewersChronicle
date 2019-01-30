@@ -19,6 +19,6 @@ e.g "Summer pale ale|2017010114032846b96ce3c78b364f9"
 
 Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile.
 
-If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
+If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature and return that value to the plug-in. That target temperature will then be applied to the relevant fermentor controller. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
 
 <strong>NB</strong>: one thing to note is that you will need to have a paid Brewers Chronicle brewery subscription to use the API. The free account does not allow API usage
