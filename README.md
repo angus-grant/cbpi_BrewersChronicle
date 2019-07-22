@@ -12,7 +12,7 @@ Read through the article on the <a href="https://github.com/Manuel83/craftbeerpi
 
 <strong>Configuration</strong>
 
-You will need to copy your API Key from the relevant brewery selected from https://brewerschronicle.com/BreweryDetails. Once you have selected the target brewery, expand the "Integration and API" section.
+You will need to copy your API Key from the relevant brewery selected on the <A href="https://brewerschronicle.com/BreweryDetails">brewery details</a> page on Brewers Chronicle. Once you have selected the target brewery, expand the "Integration and API" section.
 
 Copy and paste the API Key into the "brewerschronicle_api_key setting in the Parameters section.
 
