@@ -4,9 +4,11 @@ This plug-in submits your ferment temperatures to the relevant ferment log in yo
 
 <strong>Installation</strong>
 
-Use the "Add-On" section in the "System" menu to download and install this plug-in.
+At this stage, my request (from January 2019) to be added to the built-in "Add-On" section in CraftBeerPi has not been actioned.
 
-Alternatively, you can pull the source files from GitHub into the [craftbeerpi]/modules/plugins/ directory
+Unfortunately this means that you will have to manually install this plug-in. Download the "__init__.py" file into a new directory in the [craftbeerpi]/modules/plugins/ directory on your device.
+
+Read through the article on the <a href="https://github.com/Manuel83/craftbeerpi3/wiki/Extending-CraftBeerPi">CraftBeerPi website</a> on how to develop a plug-in. You could create the plug-in file and copy all content from the "__init.py" file in this repository.
 
 <strong>Configuration</strong>
 
