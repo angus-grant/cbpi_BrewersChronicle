@@ -2,7 +2,7 @@ from modules import cbpi
 import requests
 import time
 
-bc_uri = "https://api.brewerschronicle.com/api/readings/cbpi"
+bc_base_uri = "http://api.brewerschronicle.com/api/"
 
 def bc_api_key():
   api_key = cbpi.get_config_parameter('brewerschronicle_api_key', None)
@@ -21,34 +21,71 @@ def brewerschronicle_background_task(api):
   for i, fermenter in cbpi.cache.get("fermenter").iteritems():
     if fermenter.state is not False:
       try:
-        components = fermenter.brewname.split("|");
-        brew_name = components[0]
+	writeReadingsToBC = True
+	logBC(" ")
 
-        logBC("Starting temperature post for {0}".format(brew_name))
+	try:
+		fermentInfo_uri = bc_base_uri + "fermentLogs/GetFermentLogInfoByAssetName"
+		data = {"AssetAPIId": fermenter.name, "ReadingValue": "", "ControlSoftwareName": "CraftBeerPi"}
+		headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key}
+		response = requests.post(fermentInfo_uri, json=data, headers = headers, timeout = 1)
+		responseData = response.json()
+	except Exception as e:
+		logBC("exception getting info from BC: {0}".format(e))
+		pass
 
-        ferment_id = components[1]
-        temp = fermenter.instance.get_temp()
-        unit = cbpi.get_config_parameter("unit", "C")
-        data = {"api_key": api_key, "ferment_id": ferment_id, "temperature": temp, "temp_unit": unit}
-        logBC("Temperature post payload: {0}".format(data))
+	if response.status_code == 404:
+		logBC("attempting to stop fermenter")
+		fermenter.instance.stop()
 
-        response = requests.post(bc_uri, json=data)
-        data = response.json()
-        set_temp = data['set_temp']
-        logBC("set_temp: {0}".format(set_temp))
+		brewName = ""
+		targetTemperature = 0
 
-        temp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, set_temp)
-        headers = {'content-type': 'application/json'}
-        logBC(temp_api_url)
-        requests.post(temp_api_url, data="", headers = headers, timeout = 1)
-        logBC(response)
+		writeReadingsToBC = False
+	else:
+		brewName = responseData['Name']
+		targetTemperature = responseData['TargetTemperature']
 
-        logBC(fermenter.instance.get_target_temp())
-        logBC(fermenter.instance.cache_key)
+	try:
+		set_name_uri = "http://localhost:5000/api/fermenter/{0}/brewname".format(fermenter.id)
+	        headers = {'content-type': 'application/json'}
+		data = {"brewname": brewName}
+	        requests.post(set_name_uri, json=data, headers = headers, timeout = 1)
+	except Exception as e:
+		logBC("exception writing brew name: {0}".format(e))
+		pass
 
-        message = "{0}: Temp posted".format(brew_name)
-        cbpi.notify("Brewers Chronicle", message, type="info", timeout=None)
-        logBC(message)
+	try:
+		targetTemp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, targetTemperature)
+	        headers = {'content-type': 'application/json'}
+	        requests.post(targetTemp_api_url, data="", headers = headers, timeout = 1)
+	except Exception as e:
+		logBC("exception writing target temp to CBPi from BC info: {0}".format(e))
+		pass
+
+	if bool(writeReadingsToBC) is True:
+		logBC("writing readings to BC")
+
+		try:
+			bc_post_reading = bc_base_uri + "fermentLogs/PostReadingByAPIId"
+		        temp = fermenter.instance.get_temp()
+			sensorName = cbpi.cache['sensors'][int(fermenter.sensor)].name
+			data = {"AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi"}
+			headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key}
+	        	response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
+		except Exception as e:
+			logBC("exception writing temp to BrewersChronicle: {0}".format(e))
+			pass
+
+	        try:
+	                temp = fermenter.instance.get_target_temp()
+	                sensorName = cbpi.cache['sensors'][int(fermenter.sensor2)].name
+	                data = {"AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi" }
+			headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key }
+	                response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
+	        except Exception as e:
+	                logBC("exception writing target temp to BrewersChronicle: {0}".format(e))
+	                pass
 
       except Exception as e:
         logBC("Exception: {0}".format(e))
