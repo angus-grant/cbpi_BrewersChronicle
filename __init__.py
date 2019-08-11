@@ -2,8 +2,8 @@ from modules import cbpi
 import requests
 import time
 
-bc_base_uri = "http://192.168.0.27:51402/api/"
-# bc_base_uri = "http://api.brewerschronicle.com/api/"
+# bc_base_uri = "http://192.168.0.27:51402/api/"
+bc_base_uri = "http://api.brewerschronicle.com/api/"
 
 def bc_api_key():
   api_key = cbpi.get_config_parameter('brewerschronicle_api_key', None)
@@ -13,7 +13,7 @@ def bc_api_key():
   else:
     return api_key
 
-@cbpi.backgroundtask(key="brewerschronicle_task", interval=60)
+@cbpi.backgroundtask(key="brewerschronicle_task", interval=900)
 def brewerschronicle_background_task(api):
   api_key = bc_api_key()
   if api_key == "":
