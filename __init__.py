@@ -2,8 +2,8 @@ from modules import cbpi
 import requests
 import time
 
-# bc_base_uri = "http://192.168.0.27:51402/api/"
-bc_base_uri = "http://api.brewerschronicle.com/api/"
+bc_base_uri = "http://192.168.0.27:51402/api/"
+# bc_base_uri = "http://api.brewerschronicle.com/api/"
 
 def bc_api_key():
   api_key = cbpi.get_config_parameter('brewerschronicle_api_key', None)
@@ -86,7 +86,7 @@ def brewerschronicle_background_task(api):
 
                 try:
                     temp = fermenter.instance.get_target_temp()
-                    sensorName = cbpi.cache['sensors'][int(fermenter.sensor2)].name
+                    sensorName = fermenter.name + " target temp"
                     data = {"AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi" }
                     headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key }
                     response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
