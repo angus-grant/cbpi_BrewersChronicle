@@ -20,11 +20,10 @@ You will need to copy your API Key from the relevant brewery selected on the <A 
 
 Copy and paste the API Key into the "brewerschronicle_api_key setting in the Parameters section.
 
-When entering a name for each of your active ferments enter in the "|" pipe symbol followed by the ferment id copied out of Brewers Chronicle.
-e.g "Summer pale ale|2017010114032846b96ce3c78b364f9"
+You will then need to configure brewery assets in the Brewery Details area to macth up the brewery asset devices to have the same "APIId" as your sensor name in CBPi3. You can view further documentation in the <a href="">Brewery Assets</a> knowledge base article
 
 Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile.
 
 If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature and return that value to the plug-in. That target temperature will then be applied to the relevant fermentor controller. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
 
-<strong>NB</strong>: one thing to note is that you will need to have a paid Brewers Chronicle brewery subscription to use the API. The free account does not allow API usage
+<strong>NB</strong>: one thing to note is that you will need to have a paid Brewers Chronicle subscription or switch to the personal-free-api subscription to use the API.
