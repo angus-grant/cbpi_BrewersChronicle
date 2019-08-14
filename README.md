@@ -9,6 +9,7 @@ At this stage, my request (from January 2019) to be added to the built-in "Add-O
 Log in to your Raspberry Pi console and navigate to the plugins directory of the CBPi3 install.
 Default location is /home/pi/craftbeerpi3/modules/plugins
 Then copy and paste this command into your console:
+
 git clone https://github.com/angusgrantBC/cbpi_BrewersChronicle.git BrewersChronicle
 
 You will then need to restart CraftBerrPi by copying the below command into your Pi console. Or you can restart the entire device from within CraftBeerPi3 website
