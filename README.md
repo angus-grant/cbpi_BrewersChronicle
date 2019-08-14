@@ -6,9 +6,12 @@ This plug-in submits your ferment temperatures to the relevant ferment log in yo
 
 At this stage, my request (from January 2019) to be added to the built-in "Add-On" section in CraftBeerPi has not been actioned.
 
-Unfortunately this means that you will have to manually install this plug-in. Download the "__init__.py" file into a new directory in the [craftbeerpi]/modules/plugins/ directory on your device.
+Log in to your Raspberry Pi console and navigate to the plugins directory of the CBPi3 install.
+Default location is /home/pi/craftbeerpi3/modules/plugins
+Then copy and paste this command into your console: git clone https://github.com/angusgrantBC/cbpi_BrewersChronicle.git BrewersChronicle
 
-Read through the article on the <a href="https://github.com/Manuel83/craftbeerpi3/wiki/Extending-CraftBeerPi">CraftBeerPi website</a> on how to develop a plug-in. You could create the plug-in file and copy all content from the "__init.py" file in this repository.
+You will then need to restart CraftBerrPi by copying the below command into your Pi console. Or you can restart the entire device from within CraftBeerPi3 website
+sudo service craftbeerpiboot restart
 
 <strong>Configuration</strong>
 
