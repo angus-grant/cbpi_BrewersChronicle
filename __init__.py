@@ -2,6 +2,8 @@ from modules import cbpi
 import requests
 import time
 
+#version 1.3.0.0
+
 bc_base_uri = "http://api.brewerschronicle.com/api/"
 
 def bc_api_key():
