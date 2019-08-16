@@ -34,20 +34,19 @@ def brewerschronicle_background_task(api):
                 responseData = response.json()
             except Exception as e:
                 logBC("exception getting info from BC: {0}".format(e))
-                pass
 
-            if response.status_code == 404:
+            if response.status_code == 400:
+                cbpi.notify("BC", response.content, type="danger", timeout=30000)
                 logBC("attempting to stop fermenter")
                 fermenter.instance.stop()
                 fermenter.state = not fermenter.state
-                #cbpi.emit(e, "")
-                cbpi.notify("Brewers Chronicle", "Fermentor {0} has been stopped as it is not linked to a ferment log".format(fermenter.name), timeout=None)
 
                 brewName = ""
                 targetTemperature = 0
 
                 writeReadingsToBC = False
             else:
+                logBC("trying to get responseData")
                 brewName = responseData['Name']
                 targetTemperature = responseData['TargetTemperature']
 
@@ -66,9 +65,6 @@ def brewerschronicle_background_task(api):
                 targetTemp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, targetTemperature)
                 headers = {'content-type': 'application/json'}
                 requests.post(targetTemp_api_url, data="", headers = headers, timeout = 1)
-                logBC("pre-sleep")
-                time.sleep(5)
-                logBC("post-sleep")
             except Exception as e:
                 logBC("exception writing target temp to CBPi from BC info: {0}".format(e))
                 pass
@@ -83,19 +79,27 @@ def brewerschronicle_background_task(api):
                     data = {"AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi"}
                     headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key}
                     response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
-                except Exception as e:
-                    logBC("exception writing temp to BrewersChronicle: {0}".format(e))
-                    pass
+                    
+                    if response.status_code == 400:
+                        cbpi.notify("BC", response.content, type="danger", timeout=30000)
+                        logBC("attempting to stop fermentor")
+                        fermenter.instance.stop()
+                        fermenter.state = not fermenter.state
 
-                try:
-                    sensorName = fermenter.name + " target temp"
-                    data = {"AssetAPIId": sensorName, "ReadingValue": targetTemperature, "ControlSoftwareName": "CraftBeerPi" }
-                    headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key }
-                    response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
-                    
-                    cbpi.notify("Brewers Chronicle", "Readings for fermentor {0} submitted to Brewers Chronicle".format(fermenter.name), timeout=15000)
-                    
-                    logBC("readings written successfully to BC")
+                        brewName = ""
+                        targetTemperature = 0
+
+                        writeReadingsToBC = False
+                    else:
+                        sensorName = fermenter.name + " target temp"
+                        data = {"AssetAPIId": sensorName, "ReadingValue": targetTemperature, "ControlSoftwareName": "CraftBeerPi" }
+                        headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key }
+                        response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
+
+                        cbpi.notify("Brewers Chronicle", "Readings for fermentor {0} submitted to Brewers Chronicle".format(fermenter.name), timeout=15000)
+
+                        logBC("readings written successfully to BC")
+
                 except Exception as e:
                     logBC("exception writing target temp to BrewersChronicle: {0}".format(e))
                     pass
