@@ -12,8 +12,10 @@ Then copy and paste this command into your console:
 
 git clone https://github.com/angusgrantBC/cbpi_BrewersChronicle.git BrewersChronicle
 
-You will then need to restart CraftBerrPi by copying the below command into your Pi console. Or you can restart the entire device from within CraftBeerPi3 website
+You will then need to restart CraftBerrPi by copying the below command into your Pi console.
 sudo service craftbeerpiboot restart
+
+Or you can restart the entire device from within CraftBeerPi3 user-interface by selecting the System choice in the Systems menu.
 
 <strong>Configuration</strong>
 
