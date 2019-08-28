@@ -35,7 +35,7 @@ def brewerschronicle_background_task(api):
 
             try:
                 fermentInfo_uri = bc_base_uri + "fermentLogs/GetFermentLogInfoByAssetName"
-                data = {"AssetAPIId": fermenter.name, "ReadingValue": "", "ControlSoftwareName": "CraftBeerPi"}
+                data = {"AssetName": fermenter.name, "AssetAPIId": fermenter.name, "ReadingValue": "", "ControlSoftwareName": "CraftBeerPi"}
                 headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key}
                 response = requests.post(fermentInfo_uri, json=data, headers = headers, timeout = 1)
                 responseData = response.json()
@@ -43,21 +43,17 @@ def brewerschronicle_background_task(api):
                 logBC("response.status_code: {0}".format(response.status_code))
 
                 if response.status_code == 400:
-                    cbpi.notify("BC", response.content, type="danger", timeout=30000)
-                    logBC("attempting to stop fermenter")
-                    fermenter.instance.stop()
-                    fermenter.state = not fermenter.state
-
                     brewName = ""
-                    targetTemperature = 0
-
-                    writeReadingsToBC = False
+                    targetTemperature = -50.0
+                    currentGravity = "-"
                 else:
                     logBC("trying to get responseData")
                     brewName = responseData['Name']
                     targetTemperature = responseData['TargetTemperature']
 
-                    cbpi.cache['sensors'][int(fermenter.sensor3)].instance.gravity = responseData['LatestGravity']
+                    currentGravity = responseData['LatestGravity']
+                    if currentGravity == None:
+                        currentGravity = "-"
 
                 try:
                     set_name_uri = "http://localhost:5000/api/fermenter/{0}/brewname".format(fermenter.id)
@@ -70,13 +66,17 @@ def brewerschronicle_background_task(api):
 
                 try:
                     if targetTemperature == -50.0:
-                        targetTemperature = 0
-                    targetTemp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, targetTemperature)
-                    headers = {'content-type': 'application/json'}
-                    requests.post(targetTemp_api_url, data="", headers = headers, timeout = 1)
+                        targetTemperature = fermenter.instance.get_target_temp()
+
+                    if targetTemperature != -50.0:
+                        targetTemp_api_url = "http://localhost:5000/api/fermenter/{0}/targettemp/{1}".format(fermenter.id, targetTemperature)
+                        headers = {'content-type': 'application/json'}
+                        requests.post(targetTemp_api_url, data="", headers = headers, timeout = 1)
                 except Exception as e:
                     logBC("exception writing target temp to CBPi from BC info: {0}".format(e))
                     pass
+
+                cbpi.cache['sensors'][int(fermenter.sensor3)].instance.gravity = currentGravity
 
                 if bool(writeReadingsToBC) is True:
                     logBC("writing readings to BC")
@@ -85,29 +85,23 @@ def brewerschronicle_background_task(api):
                         bc_post_reading = bc_base_uri + "fermentLogs/PostReadingByAPIId"
                         temp = fermenter.instance.get_temp()
                         sensorName = cbpi.cache['sensors'][int(fermenter.sensor)].name
-                        data = {"AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi"}
+                        data = {"AssetName": fermenter.name, "AssetAPIId": sensorName, "ReadingValue": temp, "ControlSoftwareName": "CraftBeerPi"}
                         headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key}
                         response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
                         
                         if response.status_code == 400:
                             cbpi.notify("BC", response.content, type="danger", timeout=30000)
-                            logBC("attempting to stop fermentor")
-                            fermenter.instance.stop()
-                            fermenter.state = not fermenter.state
 
-                            brewName = ""
-                            targetTemperature = 0
-
-                            writeReadingsToBC = False
-                        else:
+                        if targetTemperature != -50.0:
+                            logBC("logging target temp")
                             sensorName = fermenter.name + " target temp"
-                            data = {"AssetAPIId": sensorName, "ReadingValue": targetTemperature, "ControlSoftwareName": "CraftBeerPi" }
+                            data = {"AssetName": fermenter.name, "AssetAPIId": sensorName, "ReadingValue": targetTemperature, "ControlSoftwareName": "CraftBeerPi" }
                             headers = {'content-type': 'application/json', 'Authorization': 'Bearer ' + api_key }
                             response = requests.post(bc_post_reading, json=data, headers = headers, timeout = 1)
 
-                            cbpi.notify("Brewers Chronicle", "Readings for fermentor {0} submitted to Brewers Chronicle".format(fermenter.name), timeout=15000)
+                        cbpi.notify("Brewers Chronicle", "Readings for fermentor {0} submitted to Brewers Chronicle".format(fermenter.name), timeout=15000)
 
-                            logBC("readings written successfully to BC")
+                        logBC("readings written successfully to BC")
 
                     except Exception as e:
                         logBC("exception writing target temp to BrewersChronicle: {0}".format(e))
