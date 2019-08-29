@@ -42,7 +42,7 @@ def brewerschronicle_background_task(api):
 
                 logBC("response.status_code: {0}".format(response.status_code))
 
-                if response.status_code == 400:
+                if response.status_code == 400 or response.status_code == 500:
                     brewName = ""
                     targetTemperature = -50.0
                     currentGravity = "-"
