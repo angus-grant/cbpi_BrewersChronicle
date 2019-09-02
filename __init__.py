@@ -10,8 +10,7 @@ blueprint = Blueprint('bc_gravity', __name__)
 
 #version 1.3.0.0
 
-bc_base_uri = "http://192.168.0.27:51402/api/"
-# bc_base_uri = "http://api.brewerschronicle.com/api/"
+bc_base_uri = "http://api.brewerschronicle.com/api/"
 
 def bc_api_key():
   api_key = cbpi.get_config_parameter('brewerschronicle_api_key', None)
