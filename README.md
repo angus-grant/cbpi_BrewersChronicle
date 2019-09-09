@@ -33,6 +33,6 @@ Once you allocate a ferment log to your new Brewers Chronicle asset, submitted r
 
 If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature and return that value to the plug-in. That target temperature will then be applied to the relevant fermentor controller. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
 
-Please review the <a href="https://brewerschronicle.com/KB/ViewArticle/2019/8/craftbeerpi3">CraftBeerPi</a> for a full description of hos the system will work.
+Please review the <a href="https://brewerschronicle.com/KB/ViewArticle/2019/8/craftbeerpi3">CraftBeerPi</a> knowledge base article for a full description of how the system will work.
 
 <strong>NB</strong>: one thing to note is that you will need to have a paid Brewers Chronicle subscription or switch to the personal-free-api subscription to use the API.
