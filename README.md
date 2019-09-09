@@ -12,7 +12,7 @@ Then copy and paste this command into your console:
 
 git clone https://github.com/angusgrantBC/cbpi_BrewersChronicle.git BrewersChronicle
 
-You will then need to restart CraftBerrPi by copying the below command into your Pi console.
+You will then need to restart CraftBeerPi by copying the below command into your Pi console.
 sudo service craftbeerpiboot restart
 
 Or you can restart the entire device from within CraftBeerPi3 user-interface by selecting the System choice in the Systems menu.
@@ -23,15 +23,15 @@ You will need to copy your API Key from the relevant brewery selected on the <A 
 
 Copy and paste the API Key into the "brewerschronicle_api_key setting in the Parameters section.
 
-You will then need to configure brewery assets in the Brewery Details area to macth up the brewery asset devices to have the same "APIId" as your sensor name in CBPi3. <!--You can view further documentation in the <a href="">Brewery Assets</a> knowledge base article-->
+You will then need to configure brewery assets in the Brewery Details area to match up the brewery asset devices to have the same "APIId" as your sensor name in CBPi3. <!--You can view further documentation in the <a href="">Brewery Assets</a> knowledge base article-->
 
-Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile for any active fermentors in CBPi. If the fermentor is not currently active, no readings will be submitted.
+Every 15 minutes the temperature will be posted to the relevant ferment log in your Brewers Chronicle profile for any active fermenters in CBPi. If the fermenter is not currently active, no readings will be submitted.
 
 On the first submission of readings, Brewers Chronicle will automatically create the asset and attached devices for that asset. At that stage it will not be linked to a ferment log, so you will need to log into Brewers Chronicle and allocate a ferment log to that asset. Any readings submitted are attached to the device itself.
 
 Once you allocate a ferment log to your new Brewers Chronicle asset, submitted readings will be linked to the ferment log instead of directly to the asset device. You can elect to delete any readings attached to the device, or shift them into the ferment log.
 
-If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature and return that value to the plug-in. That target temperature will then be applied to the relevant fermentor controller. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
+If you set up a fermentation schedule for that ferment log, BC will calculate the current target temperature and return that value to the plug-in. That target temperature will then be applied to the relevant fermenter controller. The calculation will be based on days in ferment or gravity readings recorded to the ferment log, depending on how you setup the ferment schedule.
 
 Please review the <a href="https://brewerschronicle.com/KB/ViewArticle/2019/8/craftbeerpi3">CraftBeerPi</a> knowledge base article for a full description of how the system will work.
 
