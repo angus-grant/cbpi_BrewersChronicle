@@ -27,7 +27,7 @@ def brewerschronicle_background_task(api):
   if api_key == "":
     return
 
-  for i, fermenter in cbpi.cache.get("fermenter").items():
+  for i, fermenter in list(cbpi.cache.get("fermenter").items()):
     if fermenter.state is not False:
         try:
             writeReadingsToBC = True
